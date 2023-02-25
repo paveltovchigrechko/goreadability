@@ -106,6 +106,7 @@ func CountCharacters(s string) int {
 // CountWords accepts a string and returns the number of words in it.
 // The string should not have trailing spaces before new lines (e.g. "Word. \nAnother word." isn't counted correctly), nor double newlines (e.g. "Word.\n\nAnother word.")
 // Numbers count as a word (for example, "44." returns `1`, and "12 and 43." returns `3`).
+// Contractions ("I'm", "you'll", "don't") and possessives ("John's") are counted as one word.
 // TODO: case with multiple sequential new lines. ("One.\n\nTwo." => must return `2`).
 // TODO: En Dash in dates ("1845-1851" should be 2 words(?))
 func CountWords(s string) int {
