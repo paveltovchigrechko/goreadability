@@ -3,7 +3,6 @@ package dcr
 
 import (
 	"errors"
-	"fmt"
 	"goreadability/stats"
 	"math"
 	"strings"
@@ -21,14 +20,16 @@ func CalculateDCR(s string) (float64, error) {
 	if len(s) == 0 {
 		return 0.0, errors.New("Empty string.")
 	}
+
 	words := float64(stats.CountWords(s))
 	if words == 0 {
 		return 0.0, errors.New("No words were parsed. Cannot calculate Dale–Chall readability (DCR) formula.")
 	}
+
 	sentences := float64(stats.CountSentences(s))
 	diffWords := float64(countDifficultWords(s))
 	diffWordsPerc := diffWords / words * 100
-	fmt.Println(diffWordsPerc)
+	// fmt.Println(diffWordsPerc)
 	dcr := 0.1579*diffWordsPerc + 0.0496*(words/sentences)
 	if diffWordsPerc > DIFF_WORDS_THRESHOLD {
 		dcr += ADJUSTED_SCORE
@@ -40,20 +41,28 @@ func CalculateDCR(s string) (float64, error) {
 // countDifficultWords accepts a string and returns the number of difficult words in it.
 // A word is counted as a difficult one if it isn't in `easyWords` map.
 func countDifficultWords(s string) int {
+	cleanedStr := cleanText(s)
+
 	extractWord := func(c rune) bool {
 		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
 	}
-	s = strings.ReplaceAll(s, "'s", "")
 
-	words := strings.FieldsFunc(s, extractWord)
+	words := strings.FieldsFunc(cleanedStr, extractWord)
 	difficultWords := 0
+
 	for _, word := range words {
 		if _, ok := easyWords[strings.ToLower(word)]; !ok {
 			difficultWords++
-
 		}
 	}
 	return difficultWords
+}
+
+func cleanText(s string) string {
+	cleanedStr := strings.ReplaceAll(s, "’s", "")
+	cleanedStr = strings.ReplaceAll(cleanedStr, "s'", "")
+	return cleanedStr
+
 }
 
 // The map represents the words considered easy ones.
@@ -2657,6 +2666,7 @@ var easyWords = map[string]uint{
 	"thimble":            0,
 	"thin":               0,
 	"thing":              0,
+	"things":             0,
 	"think":              0,
 	"third":              0,
 	"thirsty":            0,
