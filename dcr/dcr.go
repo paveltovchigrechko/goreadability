@@ -1,4 +1,6 @@
 // Package dcr provides functions to calculate the Dale–Chall readability (DCR) formula for texts readability.
+//
+// See https://en.wikipedia.org/wiki/Dale%E2%80%93Chall_readability_formula for the details.
 package dcr
 
 import (
@@ -18,18 +20,18 @@ const (
 // The calculated DCR is rounded to the second decimal point.
 func CalculateDCR(s string) (float64, error) {
 	if len(s) == 0 {
-		return 0.0, errors.New("Empty string.")
+		return 0, errors.New("Empty string.")
 	}
 
 	words := float64(stats.CountWords(s))
 	if words == 0 {
-		return 0.0, errors.New("No words were parsed. Cannot calculate Dale–Chall readability (DCR) formula.")
+		return 0, errors.New("No words were parsed. Cannot calculate Dale–Chall readability (DCR) formula.")
 	}
 
 	sentences := float64(stats.CountSentences(s))
 	diffWords := float64(countDifficultWords(s))
 	diffWordsPerc := diffWords / words * 100
-	// fmt.Println(diffWordsPerc)
+
 	dcr := 0.1579*diffWordsPerc + 0.0496*(words/sentences)
 	if diffWordsPerc > DIFF_WORDS_THRESHOLD {
 		dcr += ADJUSTED_SCORE
@@ -58,6 +60,7 @@ func countDifficultWords(s string) int {
 	return difficultWords
 }
 
+// cleanText accepts a string and removes the possesives ("’s", "s'") from it.
 func cleanText(s string) string {
 	cleanedStr := strings.ReplaceAll(s, "’s", "")
 	cleanedStr = strings.ReplaceAll(cleanedStr, "s'", "")
@@ -1397,7 +1400,8 @@ var easyWords = map[string]uint{
 	"husband":            0,
 	"hush":               0,
 	"hut":                0,
-	"hymnI":              0,
+	"hymn":               0,
+	"i":                  0,
 	"ice":                0,
 	"icy":                0,
 	"i'd":                0,
