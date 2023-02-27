@@ -4,7 +4,7 @@
 package ari
 
 import (
-	"fmt"
+	"errors"
 	"goreadability/stats"
 	"math"
 )
@@ -78,32 +78,26 @@ var ariTable = map[int]AriResult{
 	},
 }
 
-// ====== Methods ======
-
-// PrintAll prints all AriResult fields into the standard output.
-func (ari AriResult) PrintAll() {
-	fmt.Println("Automated readability index (ARI)")
-	fmt.Println("Age:", ari.age)
-	fmt.Println("Grade Level:", ari.gradeLevel)
-}
-
 // ====== Functions ======
 
-// CalculateARI accepts a string and returns the automated readability index (ARI) of it.
+// CalculateARI accepts a non-empty string and returns the automated readability index (ARI) of it. The string has to have at least one word and at least one sentence (ended with `.`, `?`, `!`, or `...`)
 // The result is always rounded up to the nearest whole number.
-func CalculateAri(s string) int {
+func CalculateAri(s string) (int, error) {
+	if len(s) == 0 {
+		return 0, errors.New("Empty string.")
+	}
 	characters := float64(stats.CountCharacters(s))
 	words := float64(stats.CountWords(s))
 	sentences := float64(stats.CountSentences(s))
 
 	if words == 0 || sentences == 0 {
-		return 0
+		return 0, errors.New("No words of sentences in text. Cannot calculate ARI")
 	}
 
 	ariFloat := 4.71*(characters/words) + 0.5*(words/sentences) - 21.43
 	// fmt.Println("Rough ARI:", ariFloat)
 	score := int(math.Ceil(ariFloat))
-	return score
+	return score, nil
 }
 
 // ConvertARItoGrades accepts an ARI score as integer and returns the mapped to the score age and grade as strings.
