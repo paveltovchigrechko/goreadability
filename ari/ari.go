@@ -91,7 +91,7 @@ func CalculateAri(s string) (int, error) {
 	sentences := float64(stats.CountSentences(s))
 
 	if words == 0 || sentences == 0 {
-		return 0, errors.New("No words of sentences in text. Cannot calculate ARI")
+		return 0, errors.New("No words or sentences were parsed. Cannot calculate automated readability index (ARI).")
 	}
 
 	ariFloat := 4.71*(characters/words) + 0.5*(words/sentences) - 21.43
