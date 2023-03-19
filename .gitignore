@@ -15,5 +15,5 @@
 # vendor/
 
 # Supplementary files
-test*
+*.txt
 goreadability.go
