@@ -42,15 +42,15 @@ func CalculateDCR(s string) (float64, error) {
 
 // countDifficultWords accepts a string and returns the number of difficult words in it.
 // A word is counted as a difficult one if it isn't in `easyWords` map.
-func countDifficultWords(s string) int {
-	cleanedStr := cleanText(s)
+func countDifficultWords(s string) uint {
+	cleanedStr := cleanPossesives(s)
 
 	extractWord := func(c rune) bool {
 		return !unicode.IsLetter(c) && !unicode.IsNumber(c)
 	}
 
 	words := strings.FieldsFunc(cleanedStr, extractWord)
-	difficultWords := 0
+	var difficultWords uint
 
 	for _, word := range words {
 		if _, ok := easyWords[strings.ToLower(word)]; !ok {
@@ -60,12 +60,11 @@ func countDifficultWords(s string) int {
 	return difficultWords
 }
 
-// cleanText accepts a string and removes the possesives ("’s", "s'") from it.
-func cleanText(s string) string {
+// cleanPossesives accepts a string and removes the possesives (suffixes "’s", "s'") from it.
+func cleanPossesives(s string) string {
 	cleanedStr := strings.ReplaceAll(s, "’s", "")
 	cleanedStr = strings.ReplaceAll(cleanedStr, "s'", "")
 	return cleanedStr
-
 }
 
 // The map represents the words considered easy ones.
