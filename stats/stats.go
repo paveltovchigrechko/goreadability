@@ -11,10 +11,10 @@ import (
 // ====== Types & Consts ======
 
 type TotalStats struct {
-	Symbols    int
-	Characters int
-	Words      int
-	Sentences  int
+	Symbols    uint
+	Characters uint
+	Words      uint
+	Sentences  uint
 }
 
 var abbreviations = []string{
@@ -78,19 +78,19 @@ func CountAllStats(text string) TotalStats {
 // The string should not have trailing spaces before new lines.
 // Only new lines do not count as symbols.
 // An ellipsis ... counts as one symbol, an ellipsis in brackets [...] counts as three symbols. (?)
-func CountSymbols(s string) int {
+func CountSymbols(s string) uint {
 	if len(s) == 0 {
 		return 0
 	}
 	ellipsis := strings.Count(s, "...")
 	newLines := strings.Count(s, "\n")
 	total := utf8.RuneCountInString(s) - newLines - 2*ellipsis
-	return total
+	return uint(total)
 }
 
 // CountCharacters accepts a string and returns the number of characters.
 // A character is a letter or a digit.
-func CountCharacters(s string) int {
+func CountCharacters(s string) uint {
 	if len(s) == 0 {
 		return 0
 	}
@@ -100,7 +100,7 @@ func CountCharacters(s string) int {
 			chars++
 		}
 	}
-	return chars
+	return uint(chars)
 }
 
 // CountWords accepts a string and returns the number of words in it.
@@ -109,7 +109,7 @@ func CountCharacters(s string) int {
 // Contractions ("I'm", "you'll", "don't") and possessives ("John's") are counted as one word.
 // TODO: case with multiple sequential new lines. ("One.\n\nTwo." => must return `2`).
 // TODO: En Dash in dates ("1845-1851" should be 2 words(?))
-func CountWords(s string) int {
+func CountWords(s string) uint {
 	if len(s) == 0 {
 		return 0
 	}
@@ -117,7 +117,7 @@ func CountWords(s string) int {
 		s = strings.ReplaceAll(s, "\n", " ")
 	}
 	words := len(strings.Fields(s))
-	return words
+	return uint(words)
 }
 
 // CountSentences accepts a string and returns the number of sentences in it.
@@ -126,7 +126,7 @@ func CountWords(s string) int {
 // TODO: ellipsis as an omission ("The witnesses reported that the suspect fled the scene ... and headed west toward the highway.")
 // TODO: cases with dots in fractions ("10.5 pbs." should return `1`.)
 // TODO: general case when there is no space after the finishing point. Should not count as a sentence.
-func CountSentences(s string) int {
+func CountSentences(s string) uint {
 	if len(s) == 0 {
 		return 0
 	}
@@ -135,5 +135,5 @@ func CountSentences(s string) int {
 	exclamations := strings.Count(s, "!")
 	questions := strings.Count(s, "?")
 	//ellipsis := strings.Count(s, "...")
-	return points + exclamations + questions //- 2*ellipsis
+	return uint(points + exclamations + questions) //- 2*ellipsis
 }
