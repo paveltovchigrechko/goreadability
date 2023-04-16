@@ -18,40 +18,40 @@ type TotalStats struct {
 	Syllables  uint
 }
 
-var abbreviations = []string{
-	"U.S.",
+var abbreviations = map[string]uint{
+	"u.s.": 2,
 
-	"Mr.",
-	"Messrs.",
-	"Mrs.",
-	"Mmes.",
-	"Ms.",
-	"Dr.",
-	"Prof.",
-	"Capt.",
-	"St.",
-	"Revd.",
-	"Rev.",
+	"mr.":     1,
+	"messrs.": 1,
+	"mrs.":    1,
+	"mmes.":   1,
+	"ms.":     1,
+	"dr.":     1,
+	"prof.":   1,
+	"capt.":   1,
+	"st.":     1,
+	"revd.":   1,
+	"rev.":    1,
 
-	"Jan.",
-	"Feb.",
-	"Mar.",
-	"Apr.",
-	"Aug.",
-	"Sept.",
-	"Oct.",
-	"Nov.",
-	"Dec.",
+	"jan.":  1,
+	"feb.":  1,
+	"mar.":  1,
+	"apr.":  1,
+	"aug.":  1,
+	"sept.": 1,
+	"oct.":  1,
+	"nov.":  1,
+	"dec.":  1,
 
-	"a.m.",
-	"p.m.",
-	"i.e.",
-	"e.g.",
-	"a.d.",
-	"b.c.",
-	"b.c.e.",
-	"c.e.",
-	"n.b.",
+	"a.m.":   2,
+	"p.m.":   2,
+	"i.e.":   2,
+	"e.g.":   2,
+	"a.d.":   2,
+	"b.c.":   2,
+	"b.c.e.": 3,
+	"c.e.":   2,
+	"n.b.":   2,
 }
 
 // ====== Methods ======
@@ -142,7 +142,14 @@ func CountSentences(s string) uint {
 	exclamations := strings.Count(s, "!")
 	questions := strings.Count(s, "?")
 	//ellipsis := strings.Count(s, "...")
-	return uint(points + exclamations + questions) //- 2*ellipsis
+	pointsInAbbreviations := 0
+	for abbreviation, points := range abbreviations {
+		if count := strings.Count(s, abbreviation); count > 0 {
+			pointsInAbbreviations += count * int(points)
+		}
+	}
+
+	return uint(points + exclamations + questions - pointsInAbbreviations) //- 2*ellipsis
 }
 
 // CountSyllables accepts a string that represents an English word and returns the number of syllables in it.
