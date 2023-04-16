@@ -15,6 +15,7 @@ type TotalStats struct {
 	Characters uint
 	Words      uint
 	Sentences  uint
+	Syllables  uint
 }
 
 var abbreviations = []string{
@@ -60,6 +61,7 @@ func (stats TotalStats) Print() {
 	fmt.Println("Characters:\t", stats.Characters)
 	fmt.Println("Words:\t\t", stats.Words)
 	fmt.Println("Sentences:\t", stats.Sentences)
+	fmt.Println("Syllables:\t", stats.Syllables)
 }
 
 // ====== Functions ======
@@ -71,6 +73,11 @@ func CountAllStats(text string) TotalStats {
 	result.Characters = CountCharacters(text)
 	result.Words = CountWords(text)
 	result.Sentences = CountSentences(text)
+	words := strings.Fields(text)
+	result.Syllables = 0
+	for _, word := range words {
+		result.Syllables += CountSyllables(word)
+	}
 	return result
 }
 
@@ -160,23 +167,21 @@ func CountSyllables(s string) uint {
 	if s[len(lower_case)-1] == 'e' {
 		syllables--
 	}
-	if s[len(lower_case)-2:] == "le" || s[len(lower_case)-3:] == "les" {
-		if !isVowel(rune(s[len(lower_case)-3])) {
-			syllables++
-		}
-	} else if s[len(lower_case)-3:] == "ed" {
-		if s[len(lower_case)-3] == 't' {
-			syllables++
-		} else if isVowel(rune(s[len(lower_case)-3])) {
-			syllables--
-		}
-	} else if s[len(lower_case)-2:] == "es" {
-		if !isVowel(rune(s[len(lower_case)-3])) && (s[len(lower_case)-3] != 'w' || s[len(lower_case)-3] != 'x' || s[len(lower_case)-3] != 'y') {
-			syllables++
-		}
-	} else if s[len(lower_case)-2:] == "ce" {
-		if !isVowel(rune(s[len(lower_case)-3])) {
-			syllables++
+	if len(lower_case) > 2 {
+		if s[len(lower_case)-2:] == "le" || s[len(lower_case)-3:] == "les" {
+			if !isVowel(rune(s[len(lower_case)-3])) {
+				syllables++
+			}
+		} else if s[len(lower_case)-3:] == "ed" {
+			if s[len(lower_case)-3] == 't' {
+				syllables++
+			} else if isVowel(rune(s[len(lower_case)-3])) {
+				syllables--
+			}
+		} else if s[len(lower_case)-2:] == "es" {
+			if !isVowel(rune(s[len(lower_case)-3])) && (s[len(lower_case)-3] != 'w' || s[len(lower_case)-3] != 'x' || s[len(lower_case)-3] != 'y') {
+				syllables++
+			}
 		}
 	}
 
