@@ -155,6 +155,9 @@ func CountSentences(s string) uint {
 // CountSyllables accepts a string that represents an English word and returns the number of syllables in it.
 // The string must contain letters only (can contain digits).
 func CountSyllables(s string) uint {
+	if len(s) < 4 {
+		return 1
+	}
 	syllables := 0
 	prev_is_vowel := false
 
@@ -174,21 +177,20 @@ func CountSyllables(s string) uint {
 	if s[len(lower_case)-1] == 'e' {
 		syllables--
 	}
-	if len(lower_case) > 2 {
-		if s[len(lower_case)-2:] == "le" || s[len(lower_case)-3:] == "les" {
-			if !isVowel(rune(s[len(lower_case)-3])) {
-				syllables++
-			}
-		} else if s[len(lower_case)-3:] == "ed" {
-			if s[len(lower_case)-3] == 't' {
-				syllables++
-			} else if isVowel(rune(s[len(lower_case)-3])) {
-				syllables--
-			}
-		} else if s[len(lower_case)-2:] == "es" {
-			if !isVowel(rune(s[len(lower_case)-3])) && (s[len(lower_case)-3] != 'w' || s[len(lower_case)-3] != 'x' || s[len(lower_case)-3] != 'y') {
-				syllables++
-			}
+
+	if s[len(lower_case)-2:] == "le" || s[len(lower_case)-3:] == "les" {
+		if !isVowel(rune(s[len(lower_case)-3])) {
+			syllables++
+		}
+	} else if s[len(lower_case)-3:] == "ed" {
+		if s[len(lower_case)-3] == 't' {
+			syllables++
+		} else if isVowel(rune(s[len(lower_case)-3])) {
+			syllables--
+		}
+	} else if s[len(lower_case)-2:] == "es" {
+		if !isVowel(rune(s[len(lower_case)-3])) && (s[len(lower_case)-3] != 'w' || s[len(lower_case)-3] != 'x' || s[len(lower_case)-3] != 'y') {
+			syllables++
 		}
 	}
 
