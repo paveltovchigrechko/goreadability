@@ -18,7 +18,7 @@ type TotalStats struct {
 	Syllables  uint
 }
 
-var abbreviations = map[string]uint{
+var abbreviations = map[string]int{
 	"u.s.": 2,
 
 	"mr.":     1,
@@ -141,15 +141,15 @@ func CountSentences(s string) uint {
 	points := strings.Count(s, ".")
 	exclamations := strings.Count(s, "!")
 	questions := strings.Count(s, "?")
-	//ellipsis := strings.Count(s, "...")
+	ellipsis := strings.Count(s, "...")
 	pointsInAbbreviations := 0
 	for abbreviation, points := range abbreviations {
 		if count := strings.Count(s, abbreviation); count > 0 {
-			pointsInAbbreviations += count * int(points)
+			pointsInAbbreviations += count * points
 		}
 	}
 
-	return uint(points + exclamations + questions - pointsInAbbreviations) //- 2*ellipsis
+	return uint(points + exclamations + questions - pointsInAbbreviations - 2*ellipsis)
 }
 
 // CountSyllables accepts a string that represents an English word and returns the number of syllables in it.
