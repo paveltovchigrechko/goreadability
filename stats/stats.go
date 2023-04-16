@@ -137,3 +137,57 @@ func CountSentences(s string) uint {
 	//ellipsis := strings.Count(s, "...")
 	return uint(points + exclamations + questions) //- 2*ellipsis
 }
+
+// CountSyllables accepts a string that represents an English word and returns the number of syllables in it.
+// The string must contain letters only (can contain digits).
+func CountSyllables(s string) uint {
+	syllables := 0
+	prev_is_vowel := false
+
+	lower_case := strings.ToLower(s)
+
+	for _, char := range lower_case {
+		if isVowel(char) {
+			if prev_is_vowel == false {
+				syllables++
+			}
+			prev_is_vowel = true
+		} else {
+			prev_is_vowel = false
+		}
+	}
+
+	if s[len(lower_case)-1] == 'e' {
+		syllables--
+	}
+	if s[len(lower_case)-2:] == "le" || s[len(lower_case)-3:] == "les" {
+		if !isVowel(rune(s[len(lower_case)-3])) {
+			syllables++
+		}
+	} else if s[len(lower_case)-3:] == "ed" {
+		if s[len(lower_case)-3] == 't' {
+			syllables++
+		} else if isVowel(rune(s[len(lower_case)-3])) {
+			syllables--
+		}
+	} else if s[len(lower_case)-2:] == "es" {
+		if !isVowel(rune(s[len(lower_case)-3])) && (s[len(lower_case)-3] != 'w' || s[len(lower_case)-3] != 'x' || s[len(lower_case)-3] != 'y') {
+			syllables++
+		}
+	} else if s[len(lower_case)-2:] == "ce" {
+		if !isVowel(rune(s[len(lower_case)-3])) {
+			syllables++
+		}
+	}
+
+	if syllables == 0 {
+		syllables++
+	}
+
+	return uint(syllables)
+}
+
+func isVowel(char rune) bool {
+	vowels := "aeiouy"
+	return strings.ContainsRune(vowels, char)
+}
