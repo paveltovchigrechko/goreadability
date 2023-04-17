@@ -1,7 +1,6 @@
-// Package gulpease provides a function to calculate Gulpease readability index for Italian texts.
-//
-// See https://it.wikipedia.org/wiki/Indice_Gulpease for the details
-package gulpease
+// Package `it` provides functions and types to calculate the readability for texts in Italian language.
+// 1. Gulpease index (https://it.wikipedia.org/wiki/Indice_Gulpease)
+package it
 
 import (
 	"errors"
@@ -9,9 +8,9 @@ import (
 	"math"
 )
 
-// Gulpease accepts a non-empty string and returns the Dale–Chall readability (DCR) formula for it. The string must contain at least one word (a number is considered a word, for example `18.` is valid string) and at least one sentence.
+// CalcGulpease accepts a non-empty string and returns the Dale–Chall readability (DCR) formula for it. The string must contain at least one word (a number is considered a word, for example `18.` is valid string) and at least one sentence.
 // The calculated result is rounded to the nearest whole number.
-func Gulpease(s string) (uint, error) {
+func CalcGulpease(s string) (uint, error) {
 	if len(s) == 0 {
 		return 0, errors.New("Empty string.")
 	}
