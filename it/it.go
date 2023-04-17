@@ -8,7 +8,7 @@ import (
 	"math"
 )
 
-// CalcGulpease accepts a non-empty string and returns the Dale–Chall readability (DCR) formula for it. The string must contain at least one word (a number is considered a word, for example `18.` is valid string) and at least one sentence.
+// CalcGulpease accepts a non-empty string and returns the Gulpease index formula for it. The string must contain at least one word (a number is considered a word, for example `18.` is valid string) and at least one sentence.
 // The calculated result is rounded to the nearest whole number.
 func CalcGulpease(s string) (uint, error) {
 	if len(s) == 0 {
