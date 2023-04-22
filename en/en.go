@@ -22,7 +22,7 @@ const (
 
 // AriResult represents the minimal age and grade to be able to read the text according automated readability index calculation.
 type AriResult struct {
-	// score      int8
+	score      int8
 	age        string
 	gradeLevel string
 }
@@ -30,58 +30,72 @@ type AriResult struct {
 // ariTable maps the ARI score to AriResult.
 var ariTable = map[int]AriResult{
 	1: {
+		1,
 		"5-6",
 		"Kindengarden",
 	},
 	2: {
+		2,
 		"6-7",
 		"First Grade",
 	},
 	3: {
+		3,
 		"7-8",
 		"Second Grade",
 	},
 	4: {
+		4,
 		"8-9",
 		"Third Grade",
 	},
 	5: {
+		5,
 		"9-10",
 		"Forth Grade",
 	},
 	6: {
+		6,
 		"10-11",
 		"Fifth Grade",
 	},
 	7: {
+		7,
 		"11-12",
 		"Sixth Grade",
 	},
 	8: {
+		8,
 		"12-13",
 		"Seventh Grade",
 	},
 	9: {
+		9,
 		"13-14",
 		"Eighth Grade",
 	},
 	10: {
+		10,
 		"14-15",
 		"Ninth Grade",
 	},
 	11: {
+		11,
 		"15-16",
 		"Tenth Grade",
 	},
 	12: {
+		12,
 		"16-17",
 		"Eleventh Grade",
 	},
 	13: {
+		13,
 		"17-18",
 		"Twelfth Grade",
 	},
 	14: {
+		14,
 		"18-22",
 		"College student",
 	},
@@ -109,17 +123,17 @@ func CalcAri(s string) (int, error) {
 	return score, nil
 }
 
-// ConvertARItoGrades accepts an ARI score as integer and returns the mapped to the score age and grade as strings.
+// ConvertARItoGrades accepts an ARI score as integer and returns the AriResult structure mapped to the score.
 //
 // If no structure found, returns {"Unknown", "Unknown"}.
-func ConvertAriToGrades(score int) (age, grade string) {
+func ConvertAriToGrades(score int) AriResult {
 	if score > 14 {
-		return "22+", "Professor level"
+		return AriResult{int8(score), "22+", "Professor level"}
 	}
 	if _, ok := ariTable[score]; !ok {
-		return "Unknown", "Unknown"
+		return AriResult{int8(score), "Unknown", "Unknown"}
 	}
-	return ariTable[score].age, ariTable[score].gradeLevel
+	return ariTable[score]
 }
 
 // CalcCli accepts a non-empty string and returns the Coleman–Liau index (CLI) for it. The string must contain at least one word (a number is considered a word, for example `18.` is valid string) and at least one sentence.
@@ -166,7 +180,7 @@ func CalcDCR(s string) (float64, error) {
 	return dcr, nil
 }
 
-// countDifficultWords accepts a string and returns the number of difficult words in it.
+// countDifficultWords accepts a string and returns the number of difficult words for Dale-Chall readability formula.
 // A word is counted as a difficult one if it isn't in `easyWords` map.
 func countDifficultWords(s string) uint {
 	cleanedStr := cleanPossesives(s)
@@ -193,7 +207,7 @@ func cleanPossesives(s string) string {
 	return cleanedStr
 }
 
-// The map represents the words considered easy ones.
+// The map represents the words considered easy ones for Dale-Chall readability formula.
 // TODO: add sillable numbers.
 var easyWords = map[string]uint{
 	"a":                  0,
