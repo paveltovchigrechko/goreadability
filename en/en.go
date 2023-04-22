@@ -123,10 +123,10 @@ func CalcAri(s string) (int, error) {
 	return score, nil
 }
 
-// ConvertARItoGrades accepts an ARI score as integer and returns the AriResult structure mapped to the score.
+// CalcAriResult accepts an ARI score as integer and returns the AriResult structure mapped to the score.
 //
 // If no structure found, returns {"Unknown", "Unknown"}.
-func ConvertAriToGrades(score int) AriResult {
+func CalcAriResult(score int) AriResult {
 	if score > 14 {
 		return AriResult{int8(score), "22+", "Professor level"}
 	}
