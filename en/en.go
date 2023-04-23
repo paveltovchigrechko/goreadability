@@ -3,7 +3,7 @@
 // 1. Automated readability index (ARI) (https://en.wikipedia.org/wiki/Automated_readability_index)
 // 2. Coleman–Liau index (CLI) (https://en.wikipedia.org/wiki/Coleman%E2%80%93Liau_index)
 // 3. Dale–Chall readability (DCR) formula (https://en.wikipedia.org/wiki/Dale%E2%80%93Chall_readability_formula)
-// 4. Flesch reading ease (FRE) (https://en.wikipedia.org/wiki/Flesch–Kincaid_readability_tests)
+// 4. Flesch reading ease score (FRES) (https://en.wikipedia.org/wiki/Flesch–Kincaid_readability_tests)
 // 5. Flesch-Kincaid grade level (FKG) (https://en.wikipedia.org/wiki/Flesch–Kincaid_readability_tests)
 package en
 
@@ -185,9 +185,9 @@ func CalcDCR(s string) (float64, error) {
 	return dcr, nil
 }
 
-// CalcFRE accepts a non-empty string and returns the Flesch reading ease score. The string must contain at least one word (a number is considered a word, for example `18.` is a valid string) and at least one sentence.
+// CalcFRES accepts a non-empty string and returns the Flesch reading ease score (FRES). The string must contain at least one word (a number is considered a word, for example `18.` is a valid string) and at least one sentence.
 // The calculated score is rounded to the first decimal point.
-func CalcFRE(s string) (float64, error) {
+func CalcFRES(s string) (float64, error) {
 	if len(s) == 0 {
 		return 0, errors.New("Empty string.")
 	}
