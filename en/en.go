@@ -1,4 +1,4 @@
-// Package `en`` provides functions and types to calculate the readability for English texts.
+// Package `en` provides functions and types to calculate the readability for English texts.
 
 // 1. Automated readability index (ARI) (https://en.wikipedia.org/wiki/Automated_readability_index)
 // 2. Coleman–Liau index (CLI) (https://en.wikipedia.org/wiki/Coleman%E2%80%93Liau_index)
