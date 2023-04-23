@@ -3,6 +3,8 @@
 // 1. Automated readability index (ARI) (https://en.wikipedia.org/wiki/Automated_readability_index)
 // 2. Coleman–Liau index (CLI) (https://en.wikipedia.org/wiki/Coleman%E2%80%93Liau_index)
 // 3. Dale–Chall readability (DCR) formula (https://en.wikipedia.org/wiki/Dale%E2%80%93Chall_readability_formula)
+// 4. Flesch reading ease (FRE) (https://en.wikipedia.org/wiki/Flesch–Kincaid_readability_tests)
+// 5. Flesch-Kincaid grade level (FKG) (https://en.wikipedia.org/wiki/Flesch–Kincaid_readability_tests)
 package en
 
 import (
@@ -178,6 +180,49 @@ func CalcDCR(s string) (float64, error) {
 	}
 	dcr = math.Round(dcr*100) / 100
 	return dcr, nil
+}
+
+// CalcFRE accepts a non-empty string and returns the Flesch reading ease score. The string must contain at least one word (a number is considered a word, for example `18.` is a valid string) and at least one sentence.
+// The calculated score is rounded to the first decimal point.
+func CalcFRE(s string) (float64, error) {
+	if len(s) == 0 {
+		return 0, errors.New("Empty string.")
+	}
+
+	words := float64(stats.CountWords(s))
+	if words == 0 {
+		return 0, errors.New("No words were parsed. Cannot calculate Flesch reading ease.")
+	}
+	sentences := float64(stats.CountSentences(s))
+	if sentences == 0 {
+		return 0, errors.New("No sentences were parsed. Cannot calculate Flesch reading ease.")
+	}
+	syllables := float64(stats.CountSyllables(s))
+
+	fre := 206.835 - 1.015*(words/sentences) - 84.6*(syllables/words)
+	fre = math.Round(fre*10) / 10
+	return fre, nil
+}
+
+// CalcFKG accepts a non-empty string and returns the Flesch-Kincaid grade level. The string must contain at least one word (a number is considered a word, for example `18.` is a valid string) and at least one sentence.
+// The calculated score is rounded to the first decimal point.
+func CalcFKG(s string) (float64, error) {
+	if len(s) == 0 {
+		return 0, errors.New("Empty string.")
+	}
+
+	words := float64(stats.CountWords(s))
+	if words == 0 {
+		return 0, errors.New("No words were parsed. Cannot calculate Flesch-Kincaid grade level.")
+	}
+	sentences := float64(stats.CountSentences(s))
+	if sentences == 0 {
+		return 0, errors.New("No sentences were parsed. Cannot calculate Flesch-Kincaid grade level.")
+	}
+	syllables := float64(stats.CountSyllables(s))
+	fkg := 0.39*(words/sentences) + 11.8*(syllables/words) - 15.59
+	fkg = math.Round(fkg*10) / 10
+	return fkg, nil
 }
 
 // countDifficultWords accepts a string and returns the number of difficult words for Dale-Chall readability formula.
