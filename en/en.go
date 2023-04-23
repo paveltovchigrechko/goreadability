@@ -171,6 +171,9 @@ func CalcDCR(s string) (float64, error) {
 	}
 
 	sentences := float64(stats.CountSentences(s))
+	if sentences == 0 {
+		return 0, errors.New("No sentences were parsed. Cannot calculate Dale-Chall readability (DCR) formula.")
+	}
 	diffWords := float64(countDifficultWords(s))
 	diffWordsPerc := diffWords / words * 100
 
